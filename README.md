@@ -8,11 +8,15 @@ The go programm takes following env-variables
 
 `BROKER_URL`
 url (including port) of kafka broker
+
 `TOPIC`
 kafka topic, that the consumer will listen to
+
 `ELASTIC_URL`
 url, where the json body will be sent, if validation is succesful (does not have to be elastic search instance)
+
 `CONSUMER_GROUP`
 kafka consumer group, that the consumer will join
+
 `DEBUG` *(optional)*
 if set to `true` program will print additional debug
