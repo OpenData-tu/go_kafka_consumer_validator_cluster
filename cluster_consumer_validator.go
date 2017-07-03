@@ -40,8 +40,8 @@ func main() {
 
     // var counter int = 0
     // url := "http://ec2-13-59-103-133.us-east-2.compute.amazonaws.com:9200/weather/luftdaten/"
-    url := "https://requestb.in/ozcmitoz"
-    // url := os.Getenv("ELASTIC_URL")
+    // url := "https://requestb.in/ozcmitoz"
+    url := os.Getenv("ELASTIC_URL")
 
     brokers := []string {broker}
 
