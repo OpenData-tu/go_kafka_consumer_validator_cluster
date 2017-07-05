@@ -1,6 +1,9 @@
 # go_kafka_consumer_validator_cluster
 a kafka consumer, that validates and pushes to elastic. Based on kafka consumer groups.
 
+## Get it from docker-hub
+[https://hub.docker.com/r/tubpaul/go_consumer/](https://hub.docker.com/r/tubpaul/go_consumer/)
+
 ## Configurable Varfiables
 The go programm takes following env-variables
 
