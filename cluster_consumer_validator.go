@@ -8,8 +8,8 @@ import (
     "bytes"
     "io/ioutil"
     "regexp"
-    // "strings"
-    // "strconv"
+    "strings"
+    "strconv"
 
     "github.com/xeipuuv/gojsonschema"
     // "github.com/Shopify/sarama"
@@ -30,7 +30,7 @@ func main() {
 
     var messageCountStart int = 0
 
-    var topics := strings.Split(os.Getenv("TOPICS"), ";")
+    topics := strings.Split(os.Getenv("TOPICS"), ";")
     // topics := []string {"greetings"}
     if debug {
         fmt.Println("Listening on topics:")
@@ -52,7 +52,10 @@ func main() {
     }
 
     // var bulk_limit int = 10
-    var bulk_limit int = os.Getenv("BULK_LIMIT")
+    bulk_limit, err := strconv.Atoi(os.Getenv("BULK_LIMIT"))
+    if err != nil {
+        panic(err)
+    }
     if debug {
         fmt.Println("Set bulk insertion limit to: " + string(bulk_limit))
     }
