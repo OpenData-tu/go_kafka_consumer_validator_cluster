@@ -10,10 +10,11 @@ ADD . /app/
 WORKDIR /app
 
 # ENV BROKER_URL 192.168.99.100:9092
-# ENV TOPIC greetings
+# ENV TOPICS greetings;abc;def;hallo;test
 # ENV ELASTIC_URL https://requestb.in/ozcmitoz
 # ENV DEBUG true
 # ENV CONSUMER_GROUP cgroup1
+# ENV DATASOURCE_ID de_blume
 
 RUN go build cluster_consumer_validator.go
 
