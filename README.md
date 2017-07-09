@@ -21,5 +21,11 @@ url, where the json body will be sent, if validation is succesful (does not have
 `CONSUMER_GROUP`
 kafka consumer group, that the consumer will join
 
+`DATASOURCE_ID`
+the id of the datasource whose outputs the consumer validates and inserts
+
+`BULK_LIMIT`
+limit of jsons that get aggregated to one bulk request
+
 `DEBUG` *(optional)*
 if set to `true` program will print additional debug
