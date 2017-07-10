@@ -7,25 +7,33 @@ a kafka consumer, that validates and pushes to elastic. Based on kafka consumer 
 ## Configurable Varfiables
 The go programm takes following env-variables
 
-*Note:* actually there can be several brokers and topics. Throuh env-variables currently only one can be set
+*Note:* actually there can be several brokers. Throuh env-variables currently only one can be set
 
 `BROKER_URL`
-url (including port) of kafka broker
+ - url (including port) of kafka broker (e.g. `'example.com:9092'`)
 
-`TOPIC`
-kafka topic, that the consumer will listen to
+`TOPICS`
+ - kafka topics, that the consumer will listen to. separated by `;` (e.g. `greetings;test;topic1;topic2`). **NOTE:** the conumer can listen to many topics. BUT: if many topics means many data_sources/importer, the requests to elasticSearch will be messed up because the consumer assumes to work for 1 datasource only.
+
 
 `ELASTIC_URL`
-url, where the json body will be sent, if validation is succesful (does not have to be elastic search instance)
+ - url, where the json body will be sent (ElasticSearch instance in our case), if validation is succesful. 
 
 `CONSUMER_GROUP`
-kafka consumer group, that the consumer will join
+ - kafka consumer group, that the consumer will join
 
 `DATASOURCE_ID`
-the id of the datasource whose outputs the consumer validates and inserts
+ - the id of the datasource whose outputs the consumer validates and inserts. is needed to build the insertion url for elasticSearch (the id is in the url as index)
 
 `BULK_LIMIT`
-limit of jsons that get aggregated to one bulk request
+ - limit of jsons that get aggregated to one bulk request. E.g. if set to 100, the consumer will aggregate *100* JSONs it reads from the kafka to one JSON that gets inserted into ElasticSearrch via the REST-api
 
 `DEBUG` *(optional)*
-if set to `true` program will print additional debug
+ - if set to `true` program will print additional debug. Be sure it actually matches the string `'true'`.
+ 
+ ## Run the container locally
+ The environment variables can be set in different ways (env-file, within docker-file or in the command itself). If done via the command line, it should look something like this
+ 
+```
+docker run --env BROKER_URL='192.168.99.100:9092' --env TOPICS='greetings;test;topic1;topic2' --env ELASTIC_URL='https://requestb.in/1lz8nqi1' --env DEBUG='true' --env CONSUMER_GROUP='cgroup1' --env DATASOURCE_ID='de_blume' --env BULK_LIMIT='100' tubpaul/go_consumer
+ ```
