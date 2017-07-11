@@ -32,7 +32,7 @@ The go programm takes following env-variables
 - sets a timeout in seconds after which the consumer will send aggregated JSONs anyways. Especially needed in order to send the last JSONs coming from the importer.
 
 `DEBUG` *(optional)*
- - if set to `true` program will print additional debug *on startup* and the repsonse status of the http request to elastic search. Be sure it actually matches the string `'true'`.
+ - if set to `true` program will print additional debug *on startup* and *the repsonse status of the http request to elastic search.* Be sure it actually matches the string `'true'`.
 
 `DEBUG_INFO` *(optional)*
  - if set to `true` program will print every debug message possible, including received jsons etc. Be sure it actually matches the string `'true'`.
