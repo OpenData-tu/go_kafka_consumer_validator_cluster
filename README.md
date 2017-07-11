@@ -28,6 +28,9 @@ The go programm takes following env-variables
 `BULK_LIMIT`
  - limit of jsons that get aggregated to one bulk request. E.g. if set to 100, the consumer will aggregate *100* JSONs it reads from the kafka to one JSON that gets inserted into ElasticSearrch via the REST-api
 
+`TIMEOUT_SECONDS`
+- sets a timeout in seconds after which the consumer will send aggregated JSONs anyways. Especially needed in order to send the last JSONs coming from the importer.
+
 `DEBUG` *(optional)*
  - if set to `true` program will print additional debug. Be sure it actually matches the string `'true'`.
  
