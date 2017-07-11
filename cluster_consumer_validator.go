@@ -24,6 +24,7 @@ func main() {
 
     // if true, debug outputs will be printed. errors are printed anyways
     var debug bool = os.Getenv("DEBUG") == "true"
+    var debug_info bool = os.Getenv("DEBUG_INFO") == "true"
     // var debug_info bool = os.Getenv("DEBUG_LEVEL_INFO") == "true"
     // var debug bool = true
     if debug {
@@ -118,15 +119,15 @@ func main() {
 
     requestChannel := make(chan string)
     go func() {
-        if debug {
+        // if debug {
             fmt.Println("Start listening for aggregated jsons to push via bulk ..... ")
-        }
+        // }
 
         // listen for validated json
         for {
             select{
                 case x := <- requestChannel:
-                    if debug {
+                    if debug_info {
                         fmt.Println("received aggregated JSON out of channel " + x)
                     }
                     buf := bytes.NewBufferString(x)
@@ -158,9 +159,9 @@ func main() {
     ticker := time.NewTicker(time.Duration(timeout_seconds) * time.Second)
     jsonChannel := make(chan string)
     go func() {
-        if debug {
+        // if debug {
             fmt.Println("Start listening for validated json ..... ")
-        }
+        // }
         var aggregated_json string = ""
         var json_counter = 0
         var index_info string = "{\"index\":  {}}\n"
@@ -170,7 +171,7 @@ func main() {
         for {
             select{
                 case x := <- jsonChannel:
-                    if debug {
+                    if debug_info {
                         fmt.Println("received JSON out of channel " + x)
                     }
                     aggregated_json += index_info
@@ -185,7 +186,7 @@ func main() {
                 // when there is a timeot, send everythin that is there
                 case <- ticker.C:
                     // check if there has been jsons incoming, so there is nothing sent when idling
-                    if debug {
+                    if debug_info {
                         fmt.Println("Received Timeout")
                     }
                     if json_counter > 0 {
@@ -200,9 +201,9 @@ func main() {
 
 
     go func() {
-        if debug {
+        // if debug {
             fmt.Println("Ready Configuring. Start to listen to kafka ..... ")
-        }
+        // }
         for {
             select {
             case err := <-consumer.Errors():
@@ -210,7 +211,7 @@ func main() {
             case msg := <-consumer.Messages():
                 messageCountStart++
                 // fmt.Println("Received messages", string(msg.Key), string(msg.Value))
-                if debug {
+                if debug_info {
                     fmt.Println("Received messages")
                 }
 
@@ -219,7 +220,7 @@ func main() {
                 if err == nil {
                     if result.Valid() {
 
-                        if debug {
+                        if debug_info {
                             fmt.Printf("The document is valid\n")
                         }
 
