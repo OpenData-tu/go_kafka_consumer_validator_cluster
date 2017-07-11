@@ -10,6 +10,7 @@ import (
     "regexp"
     "strings"
     "strconv"
+    "time"
 
     "github.com/xeipuuv/gojsonschema"
     // "github.com/Shopify/sarama"
@@ -23,6 +24,7 @@ func main() {
 
     // if true, debug outputs will be printed. errors are printed anyways
     var debug bool = os.Getenv("DEBUG") == "true"
+    // var debug_info bool = os.Getenv("DEBUG_LEVEL_INFO") == "true"
     // var debug bool = true
     if debug {
         fmt.Println("In DEBUG modus")
@@ -57,7 +59,7 @@ func main() {
         panic(err)
     }
     if debug {
-        fmt.Println("Set bulk insertion limit to: " + string(bulk_limit))
+        fmt.Println("Set bulk insertion limit to: " + strconv.Itoa(bulk_limit))
     }
 
 
@@ -74,8 +76,16 @@ func main() {
     if debug {
         fmt.Println("ElasticSearch url: " + url)
     }
-    // url += "/" + data_source_id + "/" + data + "/_bulk"
+    url += "/data-" + data_source_id + "/data/_bulk"
 
+
+    timeout_seconds, err := strconv.Atoi(os.Getenv("TIMEOUT_SECONDS"))
+    if err != nil {
+        panic(err)
+    }
+    if debug {
+        fmt.Println("Timeout set to " + strconv.Itoa(timeout_seconds) + " seconds")
+    }
 
 
 
@@ -99,6 +109,11 @@ func main() {
     
 
     doneCh := make(chan struct{})
+
+
+
+
+
 
 
     requestChannel := make(chan string)
@@ -138,7 +153,9 @@ func main() {
     }()
 
 
-
+    // use a ticker to trigger sending aggregated json every now and then
+    // especially important for the last jsons coming from the importer
+    ticker := time.NewTicker(time.Duration(timeout_seconds) * time.Second)
     jsonChannel := make(chan string)
     go func() {
         if debug {
@@ -147,18 +164,31 @@ func main() {
         var aggregated_json string = ""
         var json_counter = 0
         var index_info string = "{\"index\":  {}}\n"
-        // newlines have to be removed from json
+        // newlines have to be removed from json when using bulkinsert in elastic search
         re := regexp.MustCompile(`\r?\n`)
         // listen for validated json
         for {
             select{
                 case x := <- jsonChannel:
-                    fmt.Println("received JSON out of channel " + x)
+                    if debug {
+                        fmt.Println("received JSON out of channel " + x)
+                    }
                     aggregated_json += index_info
                     aggregated_json += re.ReplaceAllString(x, " ") + "\n"
                     json_counter += 1
                     // if bulk limit is reached send json to goroutine that does the request
                     if json_counter >= bulk_limit {
+                        requestChannel <- aggregated_json
+                        json_counter = 0
+                        aggregated_json = ""
+                    }
+                // when there is a timeot, send everythin that is there
+                case <- ticker.C:
+                    // check if there has been jsons incoming, so there is nothing sent when idling
+                    if debug {
+                        fmt.Println("Received Timeout")
+                    }
+                    if json_counter > 0 {
                         requestChannel <- aggregated_json
                         json_counter = 0
                         aggregated_json = ""
