@@ -135,6 +135,9 @@ func main() {
                     req.Header.Set("Content-Type", "application/json")
 
                     client := &http.Client{}
+                    if debug_info {
+                        fmt.Println("Sending hhtp request to elastic for bulk insertion")
+                    }
                     resp, err := client.Do(req)
                     if err != nil {
                         panic(err)
