@@ -32,11 +32,14 @@ The go programm takes following env-variables
 - sets a timeout in seconds after which the consumer will send aggregated JSONs anyways. Especially needed in order to send the last JSONs coming from the importer.
 
 `DEBUG` *(optional)*
- - if set to `true` program will print additional debug. Be sure it actually matches the string `'true'`.
- 
+ - if set to `true` program will print additional debug *on startup* and *the repsonse status of the http request to elastic search.* Be sure it actually matches the string `'true'`.
+
+`DEBUG_INFO` *(optional)*
+ - if set to `true` program will print every debug message possible, including received jsons etc. Be sure it actually matches the string `'true'`.
+
  ## Run the container locally
  The environment variables can be set in different ways (env-file, within docker-file or in the command itself). If done via the command line, it should look something like this
  
 ```
-docker run --env BROKER_URL='192.168.99.100:9092' --env TOPICS='greetings;test;topic1;topic2' --env ELASTIC_URL='https://requestb.in/1lz8nqi1' --env DEBUG='true' --env CONSUMER_GROUP='cgroup1' --env DATASOURCE_ID='de_blume' --env BULK_LIMIT='100' tubpaul/go_consumer
+docker run --env BROKER_URL='192.168.99.100:9092' --env TOPICS='greetings;test;topic1;topic2' --env ELASTIC_URL='https://requestb.in/1lz8nqi1' --env DEBUG='true' --env CONSUMER_GROUP='cgroup1' --env DATASOURCE_ID='de_blume' --env BULK_LIMIT='100' --env TIMEOUT_SECONDS='10' tubpaul/go_consumer
  ```
