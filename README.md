@@ -41,5 +41,5 @@ The go programm takes following env-variables
  The environment variables can be set in different ways (env-file, within docker-file or in the command itself). If done via the command line, it should look something like this
  
 ```
-docker run --env BROKER_URL='192.168.99.100:9092' --env TOPICS='greetings;test;topic1;topic2' --env ELASTIC_URL='https://requestb.in/1lz8nqi1' --env DEBUG='true' --env CONSUMER_GROUP='cgroup1' --env DATASOURCE_ID='de_blume' --env BULK_LIMIT='100' tubpaul/go_consumer
+docker run --env BROKER_URL='192.168.99.100:9092' --env TOPICS='greetings;test;topic1;topic2' --env ELASTIC_URL='https://requestb.in/1lz8nqi1' --env DEBUG='true' --env CONSUMER_GROUP='cgroup1' --env DATASOURCE_ID='de_blume' --env BULK_LIMIT='100' --env TIMEOUT_SECONDS='10' tubpaul/go_consumer
  ```
